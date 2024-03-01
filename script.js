@@ -8,6 +8,7 @@ function delay(ms) {
 
 function execWithTimeout(command, timeout) {
     return new Promise((resolve, reject) => {
+        console.log(command);
         exec(command, (error, stdout, stderr) => {
             if (error) { reject(error) }
             else if (stderr) { reject(stderr) }
@@ -36,6 +37,8 @@ function isCurrentHourInRange(current, start, end) {
 
 
 (async () => {
+    console.log("Node.js Time-Based Executor\n");
+
     const scheduleCommands = JSON.parse(fs.readFileSync("scheduleCommands.json", 'utf8'));
     const currentTime = new Date().getHours();
 
