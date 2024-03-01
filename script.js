@@ -1,5 +1,5 @@
 const { exec } = require('child_process');
-
+const fs = require('fs');
 
 
 function delay(ms) {
@@ -26,14 +26,20 @@ function execWithTimeout(command, timeout) {
 
 
 (async () => {
+    const scheduleCommands = JSON.parse(fs.readFileSync("scheduleCommands.json", 'utf8'));
     const currentHours = new Date().getHours();
 
-    if (currentHours >= 16 || currentHours <= 7) {
-        try {
-            await execWithTimeout(`"C:/Program Files/LGHUB/system_tray/lghub_system_tray.exe"`, 2000);
-            await execWithTimeout(`taskkill /F /IM lghub.exe`, 2000);
-        } catch (error) {
-            console.log("Error: ", error);
+    for (const schedule of scheduleCommands) {
+        const { startTime, endTime } = schedule.timeRange;
+        if (!(currentHours >= startTime || currentHours < endTime)) {
+            continue;
+        }
+        for (const { command, timeout } of schedule.commands) {
+            try {
+                await execWithTimeout(command, timeout);
+            } catch (error) {
+                console.log("Error: ", error);
+            }
         }
     }
    

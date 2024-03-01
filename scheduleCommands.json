@@ -1,0 +1,18 @@
+[
+    {
+        "timeRange": {
+            "startTime": 17,
+            "endTime": 7
+        },
+        "commands": [
+            {
+                "command": "\"C:/Program Files/LGHUB/system_tray/lghub_system_tray.exe\"",
+                "timeout": 2000
+            },
+            {
+                "command": "taskkill /F /IM lghub.exe",
+                "timeout": 2000
+            }
+        ]
+    }
+]
