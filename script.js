@@ -23,15 +23,25 @@ function execWithTimeout(command, timeout) {
     });
 }
 
+function isCurrentHourInRange(current, start, end) {
+    if (
+        (start > end && (current >= start || current < end)) ||
+        (start < end && current >= start && current < end)
+    ) {
+        return true;
+    }
+    return false;
+}
+
 
 
 (async () => {
     const scheduleCommands = JSON.parse(fs.readFileSync("scheduleCommands.json", 'utf8'));
-    const currentHours = new Date().getHours();
+    const currentTime = new Date().getHours();
 
     for (const schedule of scheduleCommands) {
-        const { startTime, endTime } = schedule.timeRange;
-        if (!(currentHours >= startTime || currentHours < endTime)) {
+        const { startTime, endTime } = schedule.timeRange; 
+        if (!isCurrentHourInRange(currentTime, startTime, endTime)) {
             continue;
         }
         for (const { command, timeout } of schedule.commands) {
